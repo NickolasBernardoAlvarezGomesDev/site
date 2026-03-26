@@ -352,30 +352,34 @@ function ContactCard({
   value,
   icon: Icon,
   external = false,
+  valueClassName,
 }: {
   href?: string;
   label: string;
   value: string;
   icon: typeof MailIcon;
   external?: boolean;
+  valueClassName?: string;
 }) {
   const content = (
     <>
-      <div className="flex items-center gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-300">
+      <div className="flex min-w-0 items-start gap-3">
+        <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-300">
           <Icon className="h-5 w-5" />
         </div>
-        <div>
-          <p className="text-sm text-slate-400">{label}</p>
-          <p className="text-sm font-medium text-white sm:text-base">{value}</p>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm leading-5 text-slate-400">{label}</p>
+          <p className={`mt-1 text-sm font-medium leading-6 text-white sm:text-base ${valueClassName ?? "break-words"}`}>
+            {value}
+          </p>
         </div>
       </div>
-      {href && <ArrowRightIcon className="h-4 w-4 text-slate-500" />}
+      {href && <ArrowRightIcon className="mt-1 h-4 w-4 shrink-0 text-slate-500" />}
     </>
   );
 
   if (!href) {
-    return <div className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-slate-950/60 p-4">{content}</div>;
+    return <div className="flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-slate-950/60 p-4">{content}</div>;
   }
 
   return (
@@ -384,7 +388,7 @@ function ContactCard({
       target={external ? "_blank" : undefined}
       rel={external ? "noreferrer" : undefined}
       aria-label={`${label}: ${value}${external ? " em nova aba" : ""}`}
-      className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-slate-950/60 p-4 transition hover:border-cyan-400/30 hover:bg-slate-950/80"
+      className="flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-slate-950/60 p-4 transition hover:border-cyan-400/30 hover:bg-slate-950/80"
     >
       {content}
     </a>
@@ -774,9 +778,9 @@ export default function PortfolioPage() {
             <div className={`${cardClass()} p-6`}>
               <div className="grid gap-4 sm:grid-cols-2">
                 <ContactCard href={WHATSAPP_URL} label="WhatsApp" value="Contato rápido para vaga ou projeto" icon={WhatsAppIcon} external />
-                <ContactCard href={`mailto:${EMAIL}`} label="E-mail" value={EMAIL} icon={MailIcon} />
+                <ContactCard href={`mailto:${EMAIL}`} label="E-mail" value={EMAIL} icon={MailIcon} valueClassName="break-all" />
                 <ContactCard href={LINKEDIN_URL} label="LinkedIn" value="Perfil profissional" icon={LinkedInIcon} external />
-                <ContactCard href={GITHUB_PROFILE} label="GitHub" value={GITHUB_USERNAME} icon={GithubIcon} external />
+                <ContactCard href={GITHUB_PROFILE} label="GitHub" value={GITHUB_USERNAME} icon={GithubIcon} external valueClassName="break-all" />
                 <div className="sm:col-span-2">
                   <ContactCard label="Localização" value={LOCATION} icon={MapPinIcon} />
                 </div>
