@@ -584,7 +584,7 @@ export default function PortfolioPage() {
             <article className={`${cardClass()} p-6`}>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Disponibilidade</p>
               <p className="mt-4 text-base leading-7 text-slate-300">
-                Aberto a oportunidades remotas e projetos técnicos em Embedded Systems, Firmware, IoT, Telemetria,
+                Aberto a oportunidades e projetos técnicos em Embedded Systems, Firmware, IoT, Telemetria,
                 Data Acquisition e integração de sistemas.
               </p>
 
@@ -792,7 +792,7 @@ export default function PortfolioPage() {
 
       <footer className="border-t border-white/10 bg-slate-950 py-6">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 text-center text-sm text-slate-400 sm:flex-row sm:text-left lg:px-8">
-          <p>© 2026 Nickolas Bernardo Alvarez Gomes. Portfólio focado em Embedded Systems, IoT, Firmware e Telemetria.</p>
+          <p>© 2026 Nickolas Bernardo Alvarez Gomes.</p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             {navItems.map((item) => (
               <a key={item.href} href={item.href} className="transition hover:text-white">
