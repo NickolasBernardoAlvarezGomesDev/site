@@ -26,7 +26,7 @@ import {
 import type { GitHubRepo } from "@/lib/github";
 import { selectTopRepos } from "@/lib/github";
 
-const GITHUB_USERNAME = "";
+const GITHUB_USERNAME = "NickolasBernardoAlvarezGomesDev";
 const GITHUB_PROFILE = "https://github.com/NickolasBernardoAlvarezGomesDev";
 const LINKEDIN_URL = "https://www.linkedin.com/in/nickolas-bernardo-alvarez-gomes-2bb114141";
 const WHATSAPP_URL = "https://w.app/vgkf9b";
@@ -777,9 +777,9 @@ export default function PortfolioPage() {
 
             <div className={`${cardClass()} p-6`}>
               <div className="grid gap-4 sm:grid-cols-2">
-                <ContactCard href={WHATSAPP_URL} label="WhatsApp" value="" icon={WhatsAppIcon} external />
+                <ContactCard href={WHATSAPP_URL} label="WhatsApp" value="51999213128" icon={WhatsAppIcon} external />
                 <ContactCard href={`mailto:${EMAIL}`} label="E-mail" value={EMAIL} icon={MailIcon} valueClassName="break-all" />
-                <ContactCard href={LINKEDIN_URL} label="LinkedIn" value="" icon={LinkedInIcon} external />
+                <ContactCard href={LINKEDIN_URL} label="LinkedIn" value="https://acesse.one/p3bcmtn" icon={LinkedInIcon} external />
                 <ContactCard href={GITHUB_PROFILE} label="GitHub" value={GITHUB_USERNAME} icon={GithubIcon} external valueClassName="break-all" />
                 <div className="sm:col-span-2">
                   <ContactCard label="Localização" value={LOCATION} icon={MapPinIcon} />
