@@ -30,7 +30,7 @@ const GITHUB_USERNAME = "";
 const GITHUB_PROFILE = "https://github.com/NickolasBernardoAlvarezGomesDev";
 const LINKEDIN_URL = "https://www.linkedin.com/in/nickolas-bernardo-alvarez-gomes-2bb114141";
 const WHATSAPP_URL = "https://w.app/vgkf9b";
-const EMAIL = "";
+const EMAIL = "nickolas_gomes1996@outlook.com";
 const LOCATION = "Rio Grande - RS, Brasil";
 
 const navItems = [
