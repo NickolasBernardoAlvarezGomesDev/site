@@ -1,297 +1,565 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   ActivityIcon,
   ArrowRightIcon,
   CalendarIcon,
+  CloseIcon,
   CpuIcon,
   DatabaseIcon,
   ExternalLinkIcon,
   FileCodeIcon,
   GithubIcon,
   GitBranchIcon,
+  LaptopIcon,
   LinkedInIcon,
   MailIcon,
   MapPinIcon,
+  MenuIcon,
   RadioIcon,
   ShieldCheckIcon,
-  SparklesIcon,
   TerminalIcon,
   WhatsAppIcon,
   WorkflowIcon,
-  WrenchIcon,
+  WrenchIcon
 } from "@/components/icons";
 import type { GitHubRepo } from "@/lib/github";
 import { selectTopRepos } from "@/lib/github";
 
-const GITHUB_USERNAME = "NickolasBernardoAlvarezGomesDev";
-const GITHUB_PROFILE = "https://github.com/NickolasBernardoAlvarezGomesDev";
-const LINKEDIN_URL = "https://www.linkedin.com/in/nickolas-bernardo-alvarez-gomes-2bb114141";
-const WHATSAPP_URL = "https://w.app/vgkf9b";
-const EMAIL = "nickolas_gomes1996@outlook.com";
-const LOCATION = "Rio Grande - RS, Brasil";
+type LocalAsset = {
+  src: string;
+  alt: string;
+};
 
-const navItems = [
-  { label: "Início", href: "#inicio" },
+type SectionTone = "dark" | "light";
+
+type FeatureItem = {
+  title: string;
+  problem: string;
+  gain: string;
+  icon: ReactNode;
+  image?: LocalAsset;
+};
+
+type ExperienceItem = {
+  role: string;
+  company: string;
+  period: string;
+  items: string[];
+};
+
+type ProjectCase = {
+  title: string;
+  area: string;
+  context: string;
+  role: string;
+  impact: string;
+  stack: string[];
+  tags: string[];
+  icon: ReactNode;
+};
+
+type SkillGroup = {
+  title: string;
+  icon: ReactNode;
+  skills: string[];
+};
+
+type FAQItemType = {
+  question: string;
+  answer: string;
+};
+
+type ContactLink = {
+  label: string;
+  value: string;
+  href?: string;
+  external?: boolean;
+  icon: ReactNode;
+  valueClassName?: string;
+};
+
+const PROFILE = {
+  name: "Nickolas Bernardo Alvarez Gomes",
+  role: "Automation Engineer | Embedded Systems | Firmware | IoT",
+  location: "Rio Grande - RS, Brasil",
+  email: "nickolas_gomes1996@outlook.com",
+  githubUsername: "NickolasBernardoAlvarezGomesDev",
+  githubUrl: "https://github.com/NickolasBernardoAlvarezGomesDev",
+  linkedinUrl: "https://www.linkedin.com/in/nickolas-bernardo-alvarez-gomes-2bb114141",
+  whatsappUrl: "https://wa.me/5551999213128?text=Ola!%20Gostaria%20de%20falar%20sobre%20o%20portfolio.",
+  summary:
+    "Portfolio tecnico orientado a firmware, telemetria, aquisicao de dados, IoT e integracao entre hardware e software."
+} as const;
+
+const NAV_ITEMS = [
   { label: "Sobre", href: "#sobre" },
-  { label: "Experiência", href: "#experiencia" },
+  { label: "Experiencia", href: "#experiencia" },
   { label: "Projetos", href: "#projetos" },
+  { label: "GitHub", href: "#github" },
   { label: "Habilidades", href: "#habilidades" },
-  { label: "Contato", href: "#contato" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Contato", href: "#contato" }
+] as const;
+
+const IMAGES = {
+  hero: {
+    primary: {
+      src: "/images/engineering/hardware-software-bridge.svg",
+      alt: "Ilustracao de integracao entre hardware, firmware, dashboards e software."
+    },
+    secondary: {
+      src: "/images/engineering/telemetry-monitoring.svg",
+      alt: "Ilustracao de telemetria, sensores, alertas e monitoramento."
+    }
+  },
+  strengths: {
+    firmware: {
+      src: "/images/engineering/embedded-firmware.svg",
+      alt: "Ilustracao de firmware, microcontroladores e integracao com perifericos."
+    },
+    telemetry: {
+      src: "/images/engineering/telemetry-monitoring.svg",
+      alt: "Ilustracao de um painel tecnico de telemetria."
+    },
+    data: {
+      src: "/images/proof/operations-dashboard.svg",
+      alt: "Ilustracao de um dashboard com metricas operacionais e fluxo de dados."
+    }
+  },
+  projects: {
+    telemetry: {
+      src: "/images/engineering/telemetry-monitoring.svg",
+      alt: "Ilustracao de observabilidade e telemetria aplicada."
+    },
+    integration: {
+      src: "/images/proof/lead-routing.svg",
+      alt: "Ilustracao de fluxo tecnico e roteamento de dados entre etapas."
+    }
+  },
+  contact: {
+    primary: {
+      src: "/images/engineering/hardware-software-bridge.svg",
+      alt: "Ilustracao de integracao de sistemas e engenharia aplicada."
+    }
+  }
+} as const;
+
+const HERO_SIGNALS = [
+  "Firmware e integracao com microcontroladores",
+  "Telemetria, sensores, LoRa e HTTP",
+  "Troubleshooting e validacao de dados em operacao"
+] as const;
+
+const STRENGTHS: FeatureItem[] = [
+  {
+    title: "Firmware + integracao hardware-software",
+    problem:
+      "Desenvolvimento e ajuste de firmware para sensores, microcontroladores e sistemas que exigem comunicacao confiavel entre eletronica e software.",
+    gain:
+      "Capacidade de conectar placa, protocolo, logica embarcada e camada de software em um fluxo tecnico unico.",
+    icon: <CpuIcon className="h-6 w-6" />,
+    image: IMAGES.strengths.firmware
+  },
+  {
+    title: "Telemetria, aquisicao e comunicacao",
+    problem:
+      "Construcao de fluxos para coletar, processar e transmitir dados em tempo real com foco em monitoramento, dataloggers e operacao em campo.",
+    gain:
+      "Mais observabilidade sobre sinais, equipamentos e ambientes que dependem de dados validos para decisao.",
+    icon: <RadioIcon className="h-6 w-6" />,
+    image: IMAGES.strengths.telemetry
+  },
+  {
+    title: "Dados, confiabilidade e troubleshooting",
+    problem:
+      "Tratamento, filtragem e depuracao de medicoes e pipelines que chegam com ruido, inconsistencias ou baixa rastreabilidade.",
+    gain:
+      "Mais robustez operacional e informacao utilizavel para monitoramento, automacao e analise tecnica.",
+    icon: <DatabaseIcon className="h-6 w-6" />,
+    image: IMAGES.strengths.data
+  }
 ];
 
-const heroSignals = ["Embedded Systems", "Firmware", "IoT", "Telemetry", "Data Acquisition", "Sensor Integration"];
-
-const highlights = [
+const EXPERIENCES: ExperienceItem[] = [
   {
-    title: "Firmware + integração hardware-software",
-    description:
-      "Atuação prática no desenvolvimento e ajuste de firmware para sensores, microcontroladores e sistemas que exigem integração confiável entre eletrônica e software.",
-    icon: CpuIcon,
-  },
-  {
-    title: "Telemetria, aquisição e comunicação",
-    description:
-      "Construção de fluxos para coleta, processamento e transmissão de dados em tempo real com foco em dataloggers, LoRa, HTTP e operação em campo.",
-    icon: RadioIcon,
-  },
-  {
-    title: "Confiabilidade operacional orientada a dados",
-    description:
-      "Validação, filtragem e troubleshooting para que sinais, medições e pipelines entreguem informação utilizável em sistemas reais de monitoramento.",
-    icon: DatabaseIcon,
-  },
-];
-
-const recruiterSummary = [
-  {
-    title: "Visão end-to-end",
-    description: "Da integração do sensor e firmware até a camada de aquisição, diagnóstico e entrega dos dados.",
-    icon: WorkflowIcon,
-  },
-  {
-    title: "Ambiente real de operação",
-    description: "Experiência aplicada em monitoramento, telemetria e troubleshooting de sistemas que precisam funcionar fora do laboratório.",
-    icon: ShieldCheckIcon,
-  },
-  {
-    title: "Perfil para times técnicos",
-    description: "Boa aderência a vagas de Embedded Systems, Firmware, IoT, Automation e Data Acquisition com interface próxima ao hardware.",
-    icon: ActivityIcon,
-  },
-];
-
-const experience = [
-  {
-    role: "Engenheiro de Automação (Pleno)",
+    role: "Engenheiro de Automacao (Pleno)",
     company: "SiMCosta",
-    period: "2025",
+    period: "2025 - atual",
     items: [
-      "Desenvolvimento de sistemas de aquisição, processamento e transmissão de dados em tempo real.",
-      "Integração de sensores ambientais, eletroquímicos e inerciais em cenários de monitoramento.",
+      "Desenvolvimento de sistemas de aquisicao, processamento e transmissao de dados em tempo real.",
+      "Integracao de sensores ambientais, eletroquimicos e inerciais em cenarios de monitoramento.",
       "Desenvolvimento de firmware embarcado com MicroPython, C e CRBasic.",
-      "Configuração de dataloggers, telemetria, pipelines de dados e troubleshooting de sistemas complexos.",
-    ],
+      "Configuracao de dataloggers, telemetria, pipelines de dados e troubleshooting de sistemas complexos."
+    ]
   },
   {
-    role: "Estagiário em Engenharia",
+    role: "Estagiario em Engenharia",
     company: "Green Next",
-    period: "2024 – 2025",
+    period: "2024 - 2025",
     items: [
-      "Testes e análise de desempenho de baterias com foco em consistência experimental.",
-      "Padronização de documentação técnica para dar rastreabilidade ao processo.",
-      "Apoio em análise de dados experimentais e melhoria de processos operacionais.",
-    ],
+      "Testes e analise de desempenho de baterias com foco em consistencia experimental.",
+      "Padronizacao de documentacao tecnica para aumentar rastreabilidade de processo.",
+      "Apoio em analise de dados experimentais e melhoria de rotinas operacionais."
+    ]
   },
   {
     role: "Pesquisa e Desenvolvimento (P&D)",
     company: "CI3D / FURG",
-    period: "2019 – 2025",
+    period: "2019 - 2025",
     items: [
       "Desenvolvimento de sistemas embarcados e dispositivos automatizados para projetos experimentais.",
-      "Integração entre hardware, software, controle e prototipagem eletromecânica.",
-      "Construção de soluções com sensores, automação e validação técnica aplicada.",
-    ],
-  },
+      "Integracao entre hardware, software, controle e prototipagem eletromecanica.",
+      "Construcao de solucoes com sensores, automacao e validacao tecnica aplicada."
+    ]
+  }
 ];
 
-const featuredProjects = [
+const PROJECT_CASES: ProjectCase[] = [
   {
-    title: "Máquina Insersora SMD",
-    area: "Automação aplicada à montagem eletrônica",
+    title: "Maquina Insersora SMD",
+    area: "Automacao aplicada a montagem eletronica",
     context:
-      "Projeto acadêmico voltado a automatizar etapas da montagem SMD, reduzindo dependência de operação manual e organizando melhor o processo de prototipagem.",
+      "Projeto academico voltado a automatizar etapas da montagem SMD, reduzindo dependencia de operacao manual e organizando melhor o processo de prototipagem.",
     role:
-      "Responsável por estruturar a lógica de automação, integrar controle, eletrônica e firmware e validar o comportamento do sistema como um conjunto único.",
+      "Responsavel por estruturar a logica de automacao, integrar controle, eletronica e firmware e validar o comportamento do sistema como um conjunto unico.",
     impact:
-      "Consolidou um case de integração end-to-end entre mecânica, eletrônica e software, reforçando capacidade de transformar conceito técnico em sistema funcional.",
-    stack: ["Firmware", "Controle", "Eletrônica", "Automação"],
+      "Consolidou um case de integracao end-to-end entre mecanica, eletronica e software, reforcando a capacidade de transformar conceito tecnico em sistema funcional.",
+    stack: ["Firmware", "Controle", "Eletronica", "Automacao"],
     tags: ["Embedded", "Motion Logic", "Prototype"],
-    icon: WorkflowIcon,
+    icon: <WorkflowIcon className="h-6 w-6" />
   },
   {
     title: "Sistemas de Monitoramento IoT",
-    area: "Telemetria e aquisição em tempo real",
+    area: "Telemetria e aquisicao em tempo real",
     context:
-      "Arquiteturas para monitoramento em campo com múltiplos sensores, exigindo aquisição contínua, validação dos sinais e transmissão confiável.",
+      "Arquiteturas para monitoramento em campo com multiplos sensores, exigindo aquisicao continua, validacao dos sinais e transmissao confiavel.",
     role:
-      "Atuação no desenvolvimento e ajuste dos fluxos de coleta, integração de sensores, processamento inicial dos dados e troubleshooting operacional.",
+      "Atuacao no desenvolvimento e ajuste dos fluxos de coleta, integracao de sensores, processamento inicial dos dados e troubleshooting operacional.",
     impact:
-      "Melhorou a robustez da telemetria e a confiança nas medições utilizadas em ambientes reais de operação e monitoramento.",
+      "Melhorou a robustez da telemetria e a confianca nas medicoes utilizadas em ambientes reais de operacao e monitoramento.",
     stack: ["IoT", "Telemetria", "Sensores", "Data Pipeline"],
     tags: ["Field Systems", "Reliability", "Real Time"],
-    icon: ActivityIcon,
+    icon: <ActivityIcon className="h-6 w-6" />
   },
   {
-    title: "Sistema de Comunicação LoRa",
+    title: "Sistema de Comunicacao LoRa",
     area: "Conectividade entre dispositivos",
     context:
-      "Necessidade de comunicação de longo alcance para dispositivos conectados, com atenção à estabilidade do enlace e à integração da arquitetura.",
+      "Necessidade de comunicacao de longo alcance para dispositivos conectados, com atencao a estabilidade do enlace e a integracao da arquitetura.",
     role:
-      "Desenho da comunicação entre nós, testes de conectividade e definição de uma base técnica para integração com sistemas maiores de IoT.",
+      "Desenho da comunicacao entre nos, testes de conectividade e definicao de uma base tecnica para integracao com sistemas maiores de IoT.",
     impact:
-      "Fortaleceu repertório em comunicação embarcada, integração de dispositivos e decisões práticas para cenários com restrição de alcance e infraestrutura.",
-    stack: ["LoRa", "IoT", "Comunicação", "Embedded"],
+      "Fortaleceu repertorio em comunicacao embarcada, integracao de dispositivos e decisoes praticas para cenarios com restricao de alcance e infraestrutura.",
+    stack: ["LoRa", "IoT", "Comunicacao", "Embedded"],
     tags: ["Wireless", "Device Integration", "Architecture"],
-    icon: RadioIcon,
+    icon: <RadioIcon className="h-6 w-6" />
   },
   {
-    title: "Automações e Processamento de Dados",
+    title: "Automacoes e Processamento de Dados",
     area: "Tooling operacional e confiabilidade",
     context:
-      "Rotinas operacionais gerando dados brutos com inconsistências, retrabalho manual e baixa rastreabilidade para análise técnica.",
+      "Rotinas operacionais gerando dados brutos com inconsistencias, retrabalho manual e baixa rastreabilidade para analise tecnica.",
     role:
-      "Desenvolvimento de scripts para tratamento, filtragem, organização e integração dos dados com foco em produtividade e qualidade operacional.",
+      "Desenvolvimento de scripts para tratamento, filtragem, organizacao e integracao dos dados com foco em produtividade e qualidade operacional.",
     impact:
-      "Reduziu esforço manual, melhorou a consistência da informação e acelerou o uso prático dos dados em análise e tomada de decisão.",
-    stack: ["Python", "Dados", "Automação", "Integração"],
+      "Reduziu esforco manual, melhorou a consistencia da informacao e acelerou o uso pratico dos dados em analise e tomada de decisao.",
+    stack: ["Python", "Dados", "Automacao", "Integracao"],
     tags: ["Tooling", "Validation", "Operational Data"],
-    icon: FileCodeIcon,
-  },
+    icon: <FileCodeIcon className="h-6 w-6" />
+  }
 ];
 
-const skillGroups = [
+const SKILL_GROUPS: SkillGroup[] = [
   {
-    title: "Programação & Software",
-    icon: TerminalIcon,
-    skills: ["Python", "C", "C++", "MicroPython", "Automação", "Scripts", "APIs", "Integração de sistemas"],
+    title: "Programacao e Software",
+    icon: <TerminalIcon className="h-6 w-6" />,
+    skills: ["Python", "C", "C++", "MicroPython", "Automacao", "Scripts", "APIs", "Integracao de sistemas"]
   },
   {
-    title: "Sistemas Embarcados & Firmware",
-    icon: CpuIcon,
-    skills: [
-      "Firmware",
-      "ESP32",
-      "STM32",
-      "Atmega",
-      "Sistemas em tempo real",
-      "Integração hardware-software",
-      "Debugging",
-      "Testes e validação",
-    ],
+    title: "Sistemas Embarcados e Firmware",
+    icon: <CpuIcon className="h-6 w-6" />,
+    skills: ["Firmware", "ESP32", "STM32", "Atmega", "Sistemas em tempo real", "Integracao hardware-software", "Debugging", "Testes e validacao"]
   },
   {
-    title: "IoT, Telemetria & Dados",
-    icon: DatabaseIcon,
-    skills: [
-      "IoT",
-      "Telemetria",
-      "Dataloggers",
-      "LoRa",
-      "HTTP",
-      "Pipelines de dados",
-      "Validação de dados",
-      "Aquisição em tempo real",
-    ],
+    title: "IoT, Telemetria e Dados",
+    icon: <DatabaseIcon className="h-6 w-6" />,
+    skills: ["IoT", "Telemetria", "Dataloggers", "LoRa", "HTTP", "Pipelines de dados", "Validacao de dados", "Aquisicao em tempo real"]
   },
   {
-    title: "Ferramentas & Ambiente",
-    icon: WrenchIcon,
-    skills: ["Git", "Linux", "CI/CD (conceitual)", "Prototipagem", "Troubleshooting"],
-  },
+    title: "Ferramentas e Ambiente",
+    icon: <WrenchIcon className="h-6 w-6" />,
+    skills: ["Git", "Linux", "CI/CD conceitual", "Prototipagem", "Troubleshooting"]
+  }
 ];
 
-function cardClass() {
-  return "rounded-3xl border border-white/10 bg-white/5 backdrop-blur";
+const FAQ_ITEMS: FAQItemType[] = [
+  {
+    question: "Que tipo de oportunidade combina melhor com o perfil?",
+    answer:
+      "Vagas e projetos de embedded systems, firmware, IoT, telemetria, aquisicao de dados, automacao e integracao hardware-software."
+  },
+  {
+    question: "O trabalho fica mais perto de hardware ou software?",
+    answer:
+      "O ponto forte esta na ponte entre os dois lados: firmware, sensores, microcontroladores, protocolos, dados e troubleshooting em ambiente real."
+  },
+  {
+    question: "Ha experiencia pratica fora de laboratorio?",
+    answer:
+      "Sim. O portfolio destaca atuacao em monitoramento, telemetria, aquisicao em tempo real e sistemas que precisam operar com confiabilidade em campo."
+  },
+  {
+    question: "Quais stacks aparecem com mais frequencia?",
+    answer:
+      "Python, C, C++, MicroPython, CRBasic, ESP32, STM32, LoRa, HTTP, dataloggers, integracao de sensores e pipelines de dados."
+  },
+  {
+    question: "O Nickolas esta aberto a contato para vagas e projetos?",
+    answer:
+      "Sim. O site foi reorganizado para facilitar contato rapido por WhatsApp, email, LinkedIn e GitHub."
+  }
+];
+
+const CONTACT_LINKS: ContactLink[] = [
+  {
+    label: "WhatsApp",
+    value: "55 51 99921-3128",
+    href: PROFILE.whatsappUrl,
+    external: true,
+    icon: <WhatsAppIcon className="h-5 w-5" />
+  },
+  {
+    label: "E-mail",
+    value: PROFILE.email,
+    href: `mailto:${PROFILE.email}`,
+    icon: <MailIcon className="h-5 w-5" />,
+    valueClassName: "break-all"
+  },
+  {
+    label: "LinkedIn",
+    value: "linkedin.com/in/nickolas-bernardo-alvarez-gomes-2bb114141",
+    href: PROFILE.linkedinUrl,
+    external: true,
+    icon: <LinkedInIcon className="h-5 w-5" />,
+    valueClassName: "break-all"
+  },
+  {
+    label: "GitHub",
+    value: PROFILE.githubUsername,
+    href: PROFILE.githubUrl,
+    external: true,
+    icon: <GithubIcon className="h-5 w-5" />,
+    valueClassName: "break-all"
+  },
+  {
+    label: "Localizacao",
+    value: PROFILE.location,
+    icon: <MapPinIcon className="h-5 w-5" />
+  }
+];
+
+const FOOTER_GROUPS = [
+  {
+    title: "Navegacao",
+    links: [
+      { label: "Sobre", href: "#sobre" },
+      { label: "Experiencia", href: "#experiencia" },
+      { label: "Projetos", href: "#projetos" },
+      { label: "GitHub", href: "#github" }
+    ]
+  },
+  {
+    title: "Especialidades",
+    links: [
+      { label: "Firmware", href: "#habilidades" },
+      { label: "Telemetria", href: "#habilidades" },
+      { label: "Aquisicao de dados", href: "#habilidades" },
+      { label: "Integracao hardware-software", href: "#sobre" }
+    ]
+  },
+  {
+    title: "Canais",
+    links: [
+      { label: "WhatsApp", href: PROFILE.whatsappUrl },
+      { label: "LinkedIn", href: PROFILE.linkedinUrl },
+      { label: "GitHub", href: PROFILE.githubUrl },
+      { label: "E-mail", href: `mailto:${PROFILE.email}` }
+    ]
+  }
+] as const;
+
+function isExternalHref(href: string) {
+  return href.startsWith("http") || href.startsWith("mailto:");
 }
 
-function badgeClass() {
-  return "rounded-full border border-white/10 px-3 py-1 text-sm text-slate-200";
+function badgeClass(variant: "brand" | "inverse" | "outline" = "brand") {
+  const variants = {
+    brand: "bg-brand/14 text-brand-dark",
+    inverse: "border border-white/12 bg-white/8 text-white",
+    outline: "border border-ink/12 bg-transparent text-slate"
+  } as const;
+
+  return `inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] ${variants[variant]}`;
 }
 
-function buttonPrimaryClass() {
-  return "inline-flex items-center justify-center gap-2 rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300";
+function buttonClass(variant: "primary" | "secondary" | "light" | "lightOutline" = "primary", fullWidth = false) {
+  const variants = {
+    primary: "bg-brand text-night shadow-soft hover:bg-brand-dark",
+    secondary: "border border-ink/10 bg-sand text-ink hover:border-accent/30 hover:bg-mist",
+    light: "bg-ink text-night shadow-soft hover:bg-white",
+    lightOutline: "border border-ink/12 bg-white/5 text-ink hover:bg-white/10"
+  } as const;
+
+  return [
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold",
+    variants[variant],
+    fullWidth ? "w-full" : ""
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
-function buttonSecondaryClass() {
-  return "inline-flex items-center justify-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm font-medium text-white transition hover:border-cyan-400/40 hover:bg-white/5";
+function cardClass(theme: SectionTone = "light") {
+  return theme === "light"
+    ? "rounded-[2rem] border border-ink/10 bg-sand shadow-soft"
+    : "rounded-[2rem] border border-ink/10 bg-mist shadow-panel";
 }
 
-function buttonTertiaryClass() {
-  return "inline-flex items-center justify-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-5 py-3 text-sm font-medium text-cyan-100 transition hover:border-cyan-300/40 hover:bg-cyan-400/15";
+function Badge({
+  children,
+  variant = "brand"
+}: {
+  children: ReactNode;
+  variant?: "brand" | "inverse" | "outline";
+}) {
+  return <span className={badgeClass(variant)}>{children}</span>;
+}
+
+function CTAButton({
+  href,
+  children,
+  variant = "primary",
+  iconLeft,
+  iconRight,
+  fullWidth = false
+}: {
+  href: string;
+  children: ReactNode;
+  variant?: "primary" | "secondary" | "light" | "lightOutline";
+  iconLeft?: ReactNode;
+  iconRight?: ReactNode;
+  fullWidth?: boolean;
+}) {
+  const external = isExternalHref(href);
+
+  return (
+    <a
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noreferrer" : undefined}
+      className={buttonClass(variant, fullWidth)}
+    >
+      {iconLeft ? <span className="inline-flex shrink-0">{iconLeft}</span> : null}
+      <span>{children}</span>
+      {iconRight ? <span className="inline-flex shrink-0">{iconRight}</span> : null}
+    </a>
+  );
 }
 
 function SectionTitle({
   eyebrow,
   title,
   description,
+  tone = "dark",
+  className = ""
 }: {
   eyebrow: string;
   title: string;
   description: string;
+  tone?: SectionTone;
+  className?: string;
 }) {
+  const light = tone === "light";
+
   return (
-    <div className="mx-auto mb-10 max-w-3xl text-center">
-      <p className="mb-3 text-sm font-semibold uppercase tracking-[0.28em] text-cyan-300">{eyebrow}</p>
-      <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">{title}</h2>
-      <p className="mt-4 text-base leading-7 text-slate-300 sm:text-lg">{description}</p>
+    <div className={`max-w-3xl ${className}`}>
+      <Badge variant={light ? "inverse" : "brand"}>{eyebrow}</Badge>
+      <h2 className={`mt-6 font-display text-3xl leading-tight text-balance sm:text-4xl ${light ? "text-white" : "text-ink"}`}>
+        {title}
+      </h2>
+      <p className={`mt-5 text-base leading-8 ${light ? "text-white/74" : "text-slate"}`}>{description}</p>
     </div>
   );
 }
 
-function CaseCard({ project }: { project: (typeof featuredProjects)[number] }) {
-  const Icon = project.icon;
-
+function FeatureCard({ title, problem, gain, icon, image }: FeatureItem) {
   return (
-    <article className={`${cardClass()} h-full p-6 lg:p-7`}>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">{project.area}</p>
-          <h3 className="mt-3 text-2xl font-semibold text-white">{project.title}</h3>
+    <article className={cardClass()}>
+      {image ? (
+        <div className="relative aspect-[16/10] overflow-hidden rounded-t-[2rem]">
+          <Image src={image.src} alt={image.alt} fill sizes="(min-width: 1024px) 28vw, 100vw" className="object-cover" />
         </div>
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-300">
-          <Icon className="h-6 w-6" />
+      ) : null}
+
+      <div className="p-6">
+        <div className="inline-flex size-14 items-center justify-center rounded-2xl border border-ink/10 bg-mist text-ink">
+          {icon}
+        </div>
+        <h3 className="mt-5 font-display text-2xl leading-tight text-ink">{title}</h3>
+        <p className="mt-4 text-sm leading-7 text-slate">{problem}</p>
+        <div className="mt-5 rounded-[1.5rem] border border-ink/10 bg-night/55 p-4 text-sm leading-7 text-slate">
+          <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-accent">Ganho tecnico</span>
+          <p className="mt-2 text-ink">{gain}</p>
         </div>
       </div>
+    </article>
+  );
+}
 
-      <div className="mt-6 space-y-5">
-        <div>
-          <p className="text-sm font-semibold text-white">Contexto / problema</p>
-          <p className="mt-2 text-sm leading-7 text-slate-300">{project.context}</p>
+function ProjectCaseCard({ project }: { project: ProjectCase }) {
+  return (
+    <article className={cardClass("dark")}>
+      <div className="p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">{project.area}</p>
+            <h3 className="mt-3 font-display text-2xl leading-tight text-ink">{project.title}</h3>
+          </div>
+          <div className="inline-flex size-14 shrink-0 items-center justify-center rounded-2xl border border-ink/10 bg-night/55 text-ink">
+            {project.icon}
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-semibold text-white">Papel do Nickolas</p>
-          <p className="mt-2 text-sm leading-7 text-slate-300">{project.role}</p>
-        </div>
-        <div>
-          <p className="text-sm font-semibold text-white">Contribuição / impacto</p>
-          <p className="mt-2 text-sm leading-7 text-slate-300">{project.impact}</p>
-        </div>
-      </div>
 
-      <div className="mt-6 flex flex-wrap gap-2">
-        {project.stack.map((item) => (
-          <span key={item} className="rounded-full bg-cyan-400/10 px-3 py-1 text-sm text-cyan-200">
-            {item}
-          </span>
-        ))}
-        {project.tags.map((item) => (
-          <span key={item} className={badgeClass()}>
-            {item}
-          </span>
-        ))}
+        <div className="mt-6 grid gap-4">
+          <div className="rounded-[1.5rem] border border-ink/10 bg-night/45 p-4">
+            <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-accent">Contexto</span>
+            <p className="mt-2 text-sm leading-7 text-slate">{project.context}</p>
+          </div>
+          <div className="rounded-[1.5rem] border border-ink/10 bg-night/45 p-4">
+            <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-accent">Papel do Nickolas</span>
+            <p className="mt-2 text-sm leading-7 text-slate">{project.role}</p>
+          </div>
+          <div className="rounded-[1.5rem] border border-brand/20 bg-brand/10 p-4">
+            <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-brand-dark">Impacto</span>
+            <p className="mt-2 text-sm leading-7 text-ink">{project.impact}</p>
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          {project.stack.map((item) => (
+            <span key={item} className="rounded-full border border-brand/20 bg-brand/10 px-3 py-1 text-sm text-ink">
+              {item}
+            </span>
+          ))}
+          {project.tags.map((item) => (
+            <span key={item} className="rounded-full border border-white/12 px-3 py-1 text-sm text-white/74">
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
     </article>
   );
@@ -301,105 +569,103 @@ function RepoCard({ repo }: { repo: GitHubRepo }) {
   const updated = new Date(repo.updated_at).toLocaleDateString("pt-BR", {
     year: "numeric",
     month: "short",
-    day: "2-digit",
+    day: "2-digit"
   });
   const repoTags = Array.from(new Set([repo.language, ...(repo.topics ?? [])].filter(Boolean) as string[])).slice(0, 4);
 
   return (
-    <article className={`${cardClass()} flex h-full flex-col p-6 transition-transform duration-300 hover:-translate-y-1 hover:border-cyan-400/40`}>
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Curadoria GitHub</p>
-          <h4 className="mt-3 text-xl font-semibold text-white">{repo.name}</h4>
+    <article className={`${cardClass()} flex h-full flex-col`}>
+      <div className="flex h-full flex-col p-6">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">Curadoria GitHub</p>
+            <h3 className="mt-3 font-display text-2xl leading-tight text-ink">{repo.name}</h3>
+          </div>
+          <GitBranchIcon className="mt-1 h-4 w-4 shrink-0 text-accent" />
         </div>
-        <GitBranchIcon className="mt-1 h-4 w-4 shrink-0 text-cyan-300" />
+
+        <p className="mt-4 min-h-[112px] text-sm leading-7 text-slate">
+          {repo.description || "Repositorio tecnico selecionado por reforcar aderencia a automacao, embedded, integracao, firmware ou dados."}
+        </p>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {repoTags.map((tag) => (
+            <span key={tag} className="rounded-full border border-ink/10 px-3 py-1 text-xs text-slate">
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-slate">
+          <span className="rounded-full border border-ink/10 bg-mist px-3 py-1 text-ink">Star {repo.stargazers_count}</span>
+          <span className="rounded-full border border-ink/10 bg-mist px-3 py-1 text-ink">Forks {repo.forks_count}</span>
+          <span>Atualizado em {updated}</span>
+        </div>
+
+        <a
+          href={repo.html_url}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-accent hover:text-sky"
+        >
+          Abrir repositorio <ExternalLinkIcon className="h-4 w-4" />
+        </a>
       </div>
-
-      <p className="mt-4 min-h-[96px] text-sm leading-7 text-slate-300">
-        {repo.description || "Repositório técnico selecionado por reforçar aderência a automação, embedded, integração ou dados."}
-      </p>
-
-      <div className="mt-5 flex flex-wrap gap-2">
-        {repoTags.map((tag) => (
-          <span key={tag} className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-200">
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-slate-400">
-        <span className={badgeClass()}>★ {repo.stargazers_count}</span>
-        <span className={badgeClass()}>Forks {repo.forks_count}</span>
-        <span>Atualizado em {updated}</span>
-      </div>
-
-      <a
-        href={repo.html_url}
-        target="_blank"
-        rel="noreferrer"
-        aria-label={`Abrir repositório ${repo.name} no GitHub em nova aba`}
-        className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-medium text-cyan-300 transition hover:text-cyan-200"
-      >
-        Abrir repositório <ExternalLinkIcon className="h-4 w-4" />
-      </a>
     </article>
   );
 }
 
-function ContactCard({
-  href,
-  label,
-  value,
-  icon: Icon,
-  external = false,
-  valueClassName,
-}: {
-  href?: string;
-  label: string;
-  value: string;
-  icon: typeof MailIcon;
-  external?: boolean;
-  valueClassName?: string;
-}) {
+function ContactCard({ item }: { item: ContactLink }) {
   const content = (
     <>
       <div className="flex min-w-0 items-start gap-3">
-        <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-300">
-          <Icon className="h-5 w-5" />
+        <div className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/8 text-white">
+          {item.icon}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm leading-5 text-slate-400">{label}</p>
-          <p className={`mt-1 text-sm font-medium leading-6 text-white sm:text-base ${valueClassName ?? "break-words"}`}>
-            {value}
-          </p>
+          <p className="text-sm leading-5 text-white/58">{item.label}</p>
+          <p className={`mt-1 text-sm font-medium leading-6 text-white sm:text-base ${item.valueClassName ?? "break-words"}`}>{item.value}</p>
         </div>
       </div>
-      {href && <ArrowRightIcon className="mt-1 h-4 w-4 shrink-0 text-slate-500" />}
+      {item.href ? <ArrowRightIcon className="mt-1 h-4 w-4 shrink-0 text-white/40" /> : null}
     </>
   );
 
-  if (!href) {
-    return <div className="flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-slate-950/60 p-4">{content}</div>;
+  if (!item.href) {
+    return <div className="flex items-start justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-night/25 p-4">{content}</div>;
   }
 
   return (
     <a
-      href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noreferrer" : undefined}
-      aria-label={`${label}: ${value}${external ? " em nova aba" : ""}`}
-      className="flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-slate-950/60 p-4 transition hover:border-cyan-400/30 hover:bg-slate-950/80"
+      href={item.href}
+      target={item.external ? "_blank" : undefined}
+      rel={item.external ? "noreferrer" : undefined}
+      className="flex items-start justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-night/25 p-4 hover:border-white/20 hover:bg-night/40"
     >
       {content}
     </a>
   );
 }
 
+function FAQCard({ item, defaultOpen = false }: { item: FAQItemType; defaultOpen?: boolean }) {
+  return (
+    <details open={defaultOpen} className={cardClass()}>
+      <summary className="group flex cursor-pointer list-none items-start justify-between gap-4 p-6">
+        <h3 className="font-display text-2xl leading-tight text-ink">{item.question}</h3>
+        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-mist">
+          <ArrowRightIcon className="h-4 w-4 transition-transform group-open:rotate-90" />
+        </span>
+      </summary>
+      <p className="px-6 pb-6 text-sm leading-7 text-slate">{item.answer}</p>
+    </details>
+  );
+}
+
 export default function PortfolioPage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [loadingRepos, setLoadingRepos] = useState(true);
   const [repoError, setRepoError] = useState<string | null>(null);
-  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     let cancelled = false;
@@ -409,18 +675,19 @@ export default function PortfolioPage() {
         setLoadingRepos(true);
         setRepoError(null);
 
-        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`, {
+        const response = await fetch(`https://api.github.com/users/${PROFILE.githubUsername}/repos?per_page=100&sort=updated`, {
           headers: {
             Accept: "application/vnd.github+json",
-            "X-GitHub-Api-Version": "2022-11-28",
-          },
+            "X-GitHub-Api-Version": "2022-11-28"
+          }
         });
 
         if (!response.ok) {
-          throw new Error("Não foi possível carregar os repositórios públicos do GitHub.");
+          throw new Error("Nao foi possivel carregar os repositorios publicos do GitHub.");
         }
 
         const data: GitHubRepo[] = await response.json();
+
         if (!cancelled) {
           setRepos(selectTopRepos(data, 4));
         }
@@ -436,353 +703,442 @@ export default function PortfolioPage() {
     }
 
     loadRepos();
+
     return () => {
       cancelled = true;
     };
   }, []);
 
-  const totalSkills = useMemo(() => skillGroups.reduce((acc, group) => acc + group.skills.length, 0), []);
-  const heroContentMotion = reduceMotion
-    ? { initial: false as const, animate: { opacity: 1, y: 0 } }
-    : { initial: { opacity: 0, y: 18 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.55 } };
-  const heroAsideMotion = reduceMotion
-    ? { initial: false as const, animate: { opacity: 1, y: 0 } }
-    : { initial: { opacity: 0, y: 22 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: 0.08 } };
+  const totalSkills = useMemo(() => SKILL_GROUPS.reduce((acc, group) => acc + group.skills.length, 0), []);
+  const proofPoints = [
+    { value: "3+", label: "frentes de experiencia entre automacao, P&D e monitoramento" },
+    { value: `${PROJECT_CASES.length}`, label: "cases organizados por contexto, papel e impacto" },
+    { value: `${totalSkills}+`, label: "habilidades cobrindo firmware, dados, integracao e tooling" }
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(14,165,233,0.18),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(56,189,248,0.14),transparent_20%),radial-gradient(circle_at_15%_80%,rgba(59,130,246,0.14),transparent_22%)]" />
-
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/78 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-8">
-          <a href="#inicio" className="text-lg font-black tracking-tight text-white" aria-label="Voltar ao início do portfólio">
-            <span className="text-cyan-300">&lt;</span> Nickolas <span className="text-cyan-300">/&gt;</span>
+    <div className="min-h-screen bg-night text-ink">
+      <header className="sticky top-0 z-[90] border-b border-ink/10 bg-night/88 text-white backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-8">
+          <a href="#topo" className="min-w-0 shrink-0">
+            <span className="block font-display text-lg font-semibold tracking-tight sm:text-xl">{PROFILE.name}</span>
+            <span className="block text-xs text-white/62">{PROFILE.role}</span>
           </a>
-
-          <nav className="hidden items-center gap-6 md:flex">
-            {navItems.map((item) => (
-              <a key={item.href} href={item.href} className="text-sm text-slate-300 transition hover:text-white">
+          <nav className="hidden items-center gap-6 xl:flex">
+            {NAV_ITEMS.map((item) => (
+              <a key={item.href} href={item.href} className="text-sm font-medium text-white/72 hover:text-white">
                 {item.label}
               </a>
             ))}
           </nav>
 
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Abrir conversa no WhatsApp com Nickolas em nova aba"
-            className={`${buttonPrimaryClass()} px-4 py-2.5`}
+          <div className="hidden items-center gap-3 lg:flex">
+            <CTAButton href={PROFILE.githubUrl} variant="lightOutline" iconLeft={<GithubIcon className="h-4 w-4" />}>
+              Ver GitHub
+            </CTAButton>
+            <CTAButton href={PROFILE.whatsappUrl} iconLeft={<WhatsAppIcon className="h-4 w-4" />}>
+              Falar no WhatsApp
+            </CTAButton>
+          </div>
+
+          <button
+            type="button"
+            aria-controls="mobile-navigation"
+            aria-expanded={isMenuOpen}
+            aria-label={isMenuOpen ? "Fechar navegacao" : "Abrir navegacao"}
+            onClick={() => setIsMenuOpen((current) => !current)}
+            className="inline-flex size-11 items-center justify-center rounded-full border border-ink/10 bg-white/5 lg:hidden"
           >
-            <WhatsAppIcon className="h-4 w-4" />
-            WhatsApp
-          </a>
+            {isMenuOpen ? <CloseIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
+          </button>
         </div>
+
+        {isMenuOpen ? (
+          <div id="mobile-navigation" className="border-t border-ink/10 bg-night/95 lg:hidden">
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-6 py-5 lg:px-8">
+              {NAV_ITEMS.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="rounded-2xl px-3 py-2 text-sm font-medium text-white/78 hover:bg-white/8 hover:text-white"
+                >
+                  {item.label}
+                </a>
+              ))}
+
+              <div className="mt-2 grid gap-3">
+                <CTAButton href={PROFILE.whatsappUrl} fullWidth iconLeft={<WhatsAppIcon className="h-4 w-4" />}>
+                  Falar no WhatsApp
+                </CTAButton>
+                <CTAButton href={PROFILE.githubUrl} variant="lightOutline" fullWidth iconLeft={<GithubIcon className="h-4 w-4" />}>
+                  Ver GitHub
+                </CTAButton>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </header>
 
-      <main>
-        <section id="inicio" className="mx-auto grid max-w-7xl gap-8 px-6 py-16 lg:grid-cols-[1.25fr_0.75fr] lg:px-8 lg:py-20">
-          <motion.div {...heroContentMotion} className="flex flex-col justify-center">
-            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-1.5 text-sm text-cyan-200">
-              <SparklesIcon className="h-4 w-4" />
-              Automation Engineer · Embedded Systems · Firmware · IoT · Telemetry
-            </div>
-
-            <h1 className="mt-6 max-w-5xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Engenharia aplicada para sistemas embarcados, firmware e aquisição de dados em campo.
-            </h1>
-
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
-              Nickolas Bernardo Alvarez Gomes atua na ponte entre <strong className="text-white">hardware</strong>,
-              <strong className="text-white"> software</strong>, <strong className="text-white">firmware</strong>,
-              telemetria e confiabilidade operacional. O foco é entregar sistemas que coletam, processam e transmitem dados
-              com consistência em contextos reais de monitoramento, automação e IoT.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Abrir conversa no WhatsApp com Nickolas em nova aba"
-                className={buttonPrimaryClass()}
-              >
-                <WhatsAppIcon className="h-4 w-4" />
-                Falar no WhatsApp
-              </a>
-              <a
-                href={GITHUB_PROFILE}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Abrir perfil de GitHub de Nickolas em nova aba"
-                className={buttonSecondaryClass()}
-              >
-                <GithubIcon className="h-4 w-4" />
-                Ver GitHub
-              </a>
-              <a
-                href={LINKEDIN_URL}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Abrir perfil de LinkedIn de Nickolas em nova aba"
-                className={buttonTertiaryClass()}
-              >
-                <LinkedInIcon className="h-4 w-4" />
-                Ver LinkedIn
-              </a>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-2">
-              {heroSignals.map((signal) => (
-                <span key={signal} className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-slate-200">
-                  {signal}
-                </span>
-              ))}
-            </div>
-
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <div className={`${cardClass()} p-4`}>
-                <p className="text-xl font-bold text-white">{experience.length}+</p>
-                <p className="mt-1 text-sm text-slate-300">Experiências aplicadas entre automação, P&D e monitoramento.</p>
-              </div>
-              <div className={`${cardClass()} p-4`}>
-                <p className="text-xl font-bold text-white">{featuredProjects.length}</p>
-                <p className="mt-1 text-sm text-slate-300">Cases técnicos organizados como problema, papel e impacto.</p>
-              </div>
-              <div className={`${cardClass()} p-4`}>
-                <p className="text-xl font-bold text-white">{totalSkills}+</p>
-                <p className="mt-1 text-sm text-slate-300">Competências cobrindo firmware, dados, integração e tooling.</p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div {...heroAsideMotion} className="grid gap-4">
-            <article className={`${cardClass()} p-6`}>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Resumo para recrutadores</p>
-              <h2 className="mt-4 text-2xl font-semibold text-white">
-                Perfil técnico forte para funções que exigem integração entre firmware, sensores, telemetria e dados.
-              </h2>
-
-              <div className="mt-6 space-y-4">
-                {recruiterSummary.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div key={item.title} className="flex gap-3 rounded-2xl border border-white/10 bg-slate-950/60 p-4">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-300">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-white">{item.title}</p>
-                        <p className="mt-1 text-sm leading-6 text-slate-300">{item.description}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </article>
-
-            <article className={`${cardClass()} p-6`}>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Disponibilidade</p>
-              <p className="mt-4 text-base leading-7 text-slate-300">
-                Aberto a oportunidades e projetos técnicos em Embedded Systems, Firmware, IoT, Telemetria,
-                Data Acquisition e integração de sistemas.
+      <main id="main-content">
+        <section id="topo" className="anchor-offset bg-hero-shell pb-16 pt-14 text-white lg:pb-24 lg:pt-20">
+          <div className="mx-auto grid w-full max-w-7xl gap-14 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-8">
+            <div className="max-w-3xl">
+              <Badge variant="inverse">Portfolio tecnico para vagas e projetos</Badge>
+              <h1 className="mt-6 font-display text-4xl leading-tight text-balance sm:text-5xl lg:text-6xl">
+                Engenharia aplicada para firmware, sistemas embarcados, telemetria e aquisicao de dados.
+              </h1>
+              <p className="mt-6 text-lg leading-8 text-white/78 text-pretty">
+                Nickolas atua na ponte entre hardware, software e operacao em campo, construindo sistemas que capturam,
+                validam e entregam dados confiaveis para monitoramento, automacao e tomada de decisao tecnica.
+              </p>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-white/66">
+                O foco do portfolio e mostrar aderencia a oportunidades em embedded systems, firmware, IoT, telemetria,
+                integracao de sistemas e troubleshooting tecnico orientado a dados.
               </p>
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                <span className={badgeClass()}>Remote-ready</span>
-                <span className={badgeClass()}>Embedded / Firmware</span>
-                <span className={badgeClass()}>IoT / Telemetry</span>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <CTAButton href={PROFILE.whatsappUrl} iconLeft={<WhatsAppIcon className="h-4 w-4" />}>
+                  Falar no WhatsApp
+                </CTAButton>
+                <CTAButton href={PROFILE.githubUrl} variant="lightOutline" iconLeft={<GithubIcon className="h-4 w-4" />}>
+                  Ver GitHub
+                </CTAButton>
+                <CTAButton href={PROFILE.linkedinUrl} variant="light" iconRight={<ArrowRightIcon className="h-4 w-4" />}>
+                  Ver LinkedIn
+                </CTAButton>
               </div>
-            </article>
-          </motion.div>
-        </section>
 
-        <section id="sobre" className="border-y border-white/10 bg-slate-900/40 py-16 lg:py-20">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <SectionTitle
-              eyebrow="Sobre"
-              title="Posicionamento técnico orientado a sistemas reais"
-              description="O foco do portfólio é mostrar Nickolas como um profissional capaz de conectar hardware, firmware, aquisição de dados, telemetria e troubleshooting operacional em contextos onde confiabilidade importa."
-            />
+              <ul className="mt-10 grid gap-4 sm:grid-cols-3">
+                {HERO_SIGNALS.map((item) => (
+                  <li key={item} className="rounded-[1.75rem] border border-white/10 bg-white/7 p-4 text-sm leading-6 text-white/80">
+                    <span className="mb-3 inline-flex size-10 items-center justify-center rounded-full bg-white/10">
+                      <ShieldCheckIcon className="h-5 w-5" />
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
 
-            <div className="grid gap-6 lg:grid-cols-3">
-              {highlights.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <article key={item.title} className={`${cardClass()} h-full p-6`}>
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-300">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-white">{item.title}</h3>
-                    <p className="mt-4 leading-7 text-slate-300">{item.description}</p>
+              <div className="mt-10 grid gap-4 sm:grid-cols-3">
+                {proofPoints.map((item) => (
+                  <article key={item.value} className="rounded-[1.75rem] border border-white/10 bg-night/25 p-5">
+                    <p className="font-display text-3xl text-brand">{item.value}</p>
+                    <p className="mt-2 text-sm leading-6 text-white/70">{item.label}</p>
                   </article>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
 
-        <section id="experiencia" className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-20">
-          <SectionTitle
-            eyebrow="Experiência"
-            title="Atuação prática em monitoramento, automação e P&D"
-            description="Experiências que reforçam capacidade de trabalhar com integração de sensores, firmware, dados experimentais e troubleshooting em ambientes técnicos."
-          />
-
-          <div className="relative mx-auto max-w-5xl">
-            <div className="absolute left-4 top-0 hidden h-full w-px bg-gradient-to-b from-cyan-400/70 via-white/10 to-transparent md:block" />
-            <div className="space-y-8">
-              {experience.map((job) => (
-                <div key={`${job.company}-${job.role}`} className="relative md:pl-14">
-                  <div className="absolute left-0 top-6 hidden h-8 w-8 items-center justify-center rounded-full border border-cyan-400/30 bg-slate-950 text-cyan-300 md:flex">
-                    <CalendarIcon className="h-4 w-4" />
-                  </div>
-                  <article className={`${cardClass()} p-6`}>
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <h3 className="text-xl font-semibold text-white">{job.role}</h3>
-                        <p className="mt-1 text-cyan-300">{job.company}</p>
-                      </div>
-                      <span className={`${badgeClass()} w-fit`}>{job.period}</span>
-                    </div>
-
-                    <ul className="mt-5 space-y-3 text-sm leading-7 text-slate-300 sm:text-base">
-                      {job.items.map((item) => (
-                        <li key={item} className="flex gap-3">
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
+            <div className="space-y-5">
+              <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 shadow-panel">
+                <div className="relative aspect-[16/13]">
+                  <Image
+                    src={IMAGES.hero.primary.src}
+                    alt={IMAGES.hero.primary.alt}
+                    fill
+                    priority
+                    sizes="(min-width: 1024px) 42vw, 100vw"
+                    className="object-cover"
+                  />
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="projetos" className="border-y border-white/10 bg-slate-900/40 py-16 lg:py-20">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <SectionTitle
-              eyebrow="Projetos"
-              title="Selected technical cases para Embedded, Firmware e IoT"
-              description="Os projetos destacados abaixo foram reescritos como cases: contexto, papel técnico, stack e contribuição concreta. A intenção é facilitar a leitura de recrutadores e líderes técnicos."
-            />
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              {featuredProjects.map((project) => (
-                <CaseCard key={project.title} project={project} />
-              ))}
-            </div>
-
-            <div className="mt-16">
-              <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <h3 className="text-2xl font-bold text-white">Repositórios públicos curados</h3>
-                  <p className="mt-2 max-w-2xl text-slate-300">
-                    Curadoria focada em aderência técnica: automação, embedded, IoT, integração, firmware, tooling e
-                    dados. A seção evita priorizar apenas atividade recente.
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-night/70 via-transparent to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5 rounded-[1.5rem] border border-ink/10 bg-night/85 p-5 text-ink shadow-soft">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate">Resumo de perfil</p>
+                  <h2 className="mt-3 font-display text-2xl leading-tight">Perfil tecnico forte para firmware, sensores, telemetria e dados.</h2>
+                  <p className="mt-3 text-sm leading-7 text-slate">
+                    Do sensor ao dashboard, com experiencia em firmware, dataloggers, LoRa, HTTP, validacao de dados e operacao em campo.
                   </p>
                 </div>
-                <a
-                  href={GITHUB_PROFILE}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Abrir perfil completo de GitHub de Nickolas em nova aba"
-                  className={buttonSecondaryClass()}
-                >
-                  Ver perfil completo <ExternalLinkIcon className="h-4 w-4" />
-                </a>
               </div>
 
-              {loadingRepos ? (
-                <div className="grid gap-6 md:grid-cols-2">
-                  {Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="h-72 animate-pulse rounded-3xl border border-white/10 bg-white/5" />
-                  ))}
+              <div className="grid gap-5 sm:grid-cols-[0.88fr_1.12fr]">
+                <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/8">
+                  <div className="relative aspect-[4/5]">
+                    <Image
+                      src={IMAGES.hero.secondary.src}
+                      alt={IMAGES.hero.secondary.alt}
+                      fill
+                      sizes="(min-width: 640px) 24vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
-              ) : repoError ? (
-                <div className="rounded-3xl border border-amber-500/20 bg-amber-500/10 p-6 text-sm leading-7 text-amber-50">
-                  {repoError} Ainda assim, o site continua funcional. Para exibir os repositórios, tente novamente ou verifique o limite de requisições da API do GitHub.
+
+                <div className="mesh-surface rounded-[1.75rem] border border-white/10 bg-white/6 p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand">Aderencia tecnica</p>
+                  <ul className="mt-5 space-y-4 text-sm leading-7 text-white/76">
+                    <li className="border-b border-white/8 pb-4">Integracao de sensores, firmware e software em sistemas reais.</li>
+                    <li className="border-b border-white/8 pb-4">Telemetria, coleta, processamento e transmissao de dados em tempo real.</li>
+                    <li>Troubleshooting operacional para aumentar confiabilidade e visibilidade tecnica.</li>
+                  </ul>
                 </div>
-              ) : (
-                <div className="grid gap-6 md:grid-cols-2">
-                  {repos.map((repo) => (
-                    <RepoCard key={repo.id} repo={repo} />
-                  ))}
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="habilidades" className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-20">
-          <SectionTitle
-            eyebrow="Habilidades"
-            title="Base técnica construída para firmware, integração e dados"
-            description="Organização por domínio para destacar amplitude sem perder foco: programação, embarcados, telemetria, dados e ferramental de trabalho."
-          />
+        <section id="sobre" className="anchor-offset section-shell py-20">
+          <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
+            <SectionTitle
+              eyebrow="Sobre"
+              title="Posicionamento tecnico orientado a sistemas reais, nao apenas stack."
+              description="A base visual vem do projeto service, mas aqui o conteudo foi reorganizado como portfolio: pontos fortes, experiencia, cases, GitHub e canais de contato do Nickolas."
+            />
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            {skillGroups.map((group) => {
-              const Icon = group.icon;
-              return (
-                <article key={group.title} className={`${cardClass()} h-full p-6`}>
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-300">
-                    <Icon className="h-6 w-6" />
+            <div className="mt-12 grid gap-6 lg:grid-cols-3">
+              {STRENGTHS.map((item) => (
+                <FeatureCard key={item.title} {...item} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="experiencia" className="anchor-offset bg-sand/65 py-20">
+          <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
+            <SectionTitle
+              eyebrow="Experiencia"
+              title="Atuacao pratica em monitoramento, automacao, P&D e operacao tecnica."
+              description="As experiencias abaixo reforcam capacidade de trabalhar com sensores, firmware, dados experimentais, telemetria e troubleshooting em ambientes tecnicos."
+            />
+
+            <div className="relative mt-12 mx-auto max-w-5xl">
+              <div className="absolute left-4 top-0 hidden h-full w-px bg-gradient-to-b from-brand/80 via-ink/10 to-transparent md:block" />
+              <div className="space-y-8">
+                {EXPERIENCES.map((job) => (
+                  <div key={`${job.company}-${job.role}`} className="relative md:pl-14">
+                    <div className="absolute left-0 top-6 hidden h-8 w-8 items-center justify-center rounded-full border border-brand/30 bg-night text-brand md:flex">
+                      <CalendarIcon className="h-4 w-4" />
+                    </div>
+                    <article className={cardClass()}>
+                      <div className="p-6">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                          <div>
+                            <h3 className="font-display text-2xl text-ink">{job.role}</h3>
+                            <p className="mt-1 text-accent">{job.company}</p>
+                          </div>
+                          <span className="w-fit rounded-full border border-ink/10 bg-mist px-3 py-1 text-sm text-ink">{job.period}</span>
+                        </div>
+
+                        <ul className="mt-5 space-y-3 text-sm leading-7 text-slate sm:text-base">
+                          {job.items.map((item) => (
+                            <li key={item} className="flex gap-3">
+                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </article>
                   </div>
-                  <h3 className="text-xl font-semibold text-white">{group.title}</h3>
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {group.skills.map((skill) => (
-                      <span key={skill} className={badgeClass()}>
-                        {skill}
-                      </span>
-                    ))}
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="projetos" className="anchor-offset section-shell bg-night py-20 text-white">
+          <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
+            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+              <div>
+                <SectionTitle
+                  eyebrow="Projetos"
+                  title="Cases tecnicos escritos para facilitar leitura de recrutadores e lideres tecnicos."
+                  description="Cada projeto foi estruturado em contexto, papel do Nickolas, impacto e stack. Isso aproxima a navegacao do portfolio da clareza que o projeto service ja tinha em sua arquitetura visual."
+                  tone="light"
+                />
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Badge variant="inverse">Embedded</Badge>
+                  <Badge variant="inverse">Firmware</Badge>
+                  <Badge variant="inverse">IoT</Badge>
+                </div>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <article className="overflow-hidden rounded-[2rem] border border-ink/10 bg-mist shadow-panel">
+                  <div className="relative aspect-[16/11]">
+                    <Image
+                      src={IMAGES.projects.telemetry.src}
+                      alt={IMAGES.projects.telemetry.alt}
+                      fill
+                      sizes="(min-width: 640px) 24vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-display text-xl text-ink">Telemetria e observabilidade</h3>
+                    <p className="mt-2 text-sm leading-7 text-slate">
+                      Monitoramento, aquisicao e confiabilidade aparecem aqui como capacidade tecnica aplicada a sistemas de campo.
+                    </p>
                   </div>
                 </article>
-              );
-            })}
-          </div>
-        </section>
 
-        <section id="contato" className="border-t border-white/10 bg-slate-900/60 py-16 lg:py-20">
-          <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
-            <div>
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.28em] text-cyan-300">Contato</p>
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                Canal rápido para vagas, projetos e conversas técnicas
-              </h2>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-                Para recrutadores e equipes técnicas, o contato mais direto é pelo WhatsApp. E-mail, LinkedIn e GitHub
-                também ficam acessíveis para análise de perfil e continuidade da conversa.
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Abrir conversa no WhatsApp com Nickolas em nova aba"
-                  className={buttonPrimaryClass()}
-                >
-                  <WhatsAppIcon className="h-4 w-4" />
-                  Falar no WhatsApp
-                </a>
-                <a href={`mailto:${EMAIL}`} aria-label={`Enviar e-mail para ${EMAIL}`} className={buttonSecondaryClass()}>
-                  <MailIcon className="h-4 w-4" />
-                  Enviar e-mail
-                </a>
+                <article className="overflow-hidden rounded-[2rem] border border-ink/10 bg-mist shadow-panel">
+                  <div className="relative aspect-[16/11]">
+                    <Image
+                      src={IMAGES.projects.integration.src}
+                      alt={IMAGES.projects.integration.alt}
+                      fill
+                      sizes="(min-width: 640px) 24vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-display text-xl text-ink">Integracao entre camadas</h3>
+                    <p className="mt-2 text-sm leading-7 text-slate">
+                      Hardware, firmware, dados e software aparecem como um desenho unico quando a demanda pede profundidade tecnica.
+                    </p>
+                  </div>
+                </article>
               </div>
             </div>
 
-            <div className={`${cardClass()} p-6`}>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <ContactCard href={WHATSAPP_URL} label="WhatsApp" value="51999213128" icon={WhatsAppIcon} external />
-                <ContactCard href={`mailto:${EMAIL}`} label="E-mail" value={EMAIL} icon={MailIcon} valueClassName="break-all" />
-                <ContactCard href={LINKEDIN_URL} label="LinkedIn" value="https://acesse.one/p3bcmtn" icon={LinkedInIcon} external />
-                <ContactCard href={GITHUB_PROFILE} label="GitHub" value={GITHUB_USERNAME} icon={GithubIcon} external valueClassName="break-all" />
-                <div className="sm:col-span-2">
-                  <ContactCard label="Localização" value={LOCATION} icon={MapPinIcon} />
+            <div className="mt-12 grid gap-6 xl:grid-cols-2">
+              {PROJECT_CASES.map((project) => (
+                <ProjectCaseCard key={project.title} project={project} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="github" className="anchor-offset bg-mist/45 py-20">
+          <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <SectionTitle
+                eyebrow="GitHub"
+                title="Repositorios publicos curados por aderencia tecnica, nao apenas atividade recente."
+                description="A selecao prioriza sinais fortes de embedded, automacao, IoT, tooling, firmware e integracao."
+              />
+              <CTAButton href={PROFILE.githubUrl} variant="secondary" iconRight={<ExternalLinkIcon className="h-4 w-4" />}>
+                Ver perfil completo
+              </CTAButton>
+            </div>
+
+            {loadingRepos ? (
+              <div className="mt-12 grid gap-6 md:grid-cols-2">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="h-80 animate-pulse rounded-[2rem] border border-ink/10 bg-sand" />
+                ))}
+              </div>
+            ) : repoError ? (
+              <div className="mt-12 rounded-[2rem] border border-amber-500/20 bg-amber-500/10 p-6 text-sm leading-7 text-amber-50">
+                {repoError} O restante do portfolio continua funcional. Se necessario, tente novamente para recarregar a curadoria do GitHub.
+              </div>
+            ) : (
+              <div className="mt-12 grid gap-6 md:grid-cols-2">
+                {repos.map((repo) => (
+                  <RepoCard key={repo.id} repo={repo} />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section id="habilidades" className="anchor-offset py-20">
+          <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
+            <SectionTitle
+              eyebrow="Habilidades"
+              title="Base tecnica construida para firmware, integracao, dados e operacao."
+              description="A organizacao por dominio mantem a amplitude do perfil sem perder foco em embedded systems, telemetria e software aplicado."
+            />
+
+            <div className="mt-12 grid gap-6 lg:grid-cols-2">
+              {SKILL_GROUPS.map((group) => (
+                <article key={group.title} className={cardClass()}>
+                  <div className="p-6">
+                    <div className="inline-flex size-14 items-center justify-center rounded-2xl border border-ink/10 bg-mist text-ink">
+                      {group.icon}
+                    </div>
+                    <h3 className="mt-5 font-display text-2xl leading-tight text-ink">{group.title}</h3>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {group.skills.map((skill) => (
+                        <span key={skill} className="rounded-full border border-ink/10 bg-mist px-3 py-1 text-sm text-ink">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="faq" className="anchor-offset bg-sand/65 py-20">
+          <div className="mx-auto w-full max-w-5xl px-6 lg:px-8">
+            <SectionTitle
+              eyebrow="FAQ"
+              title="Perguntas que ajudam a entender rapidamente o posicionamento do portfolio."
+              description="Esta secao funciona como resposta curta para recrutadores, lideres tecnicos e pessoas avaliando aderencia de perfil."
+            />
+
+            <div className="mt-12 space-y-4">
+              {FAQ_ITEMS.map((item, index) => (
+                <FAQCard key={item.question} item={item} defaultOpen={index === 0} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="contato" className="bg-night py-20 text-white">
+          <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-8">
+            <div>
+              <SectionTitle
+                eyebrow="Contato"
+                title="Canal rapido para vagas, projetos e conversas tecnicas."
+                description="WhatsApp, email, LinkedIn e GitHub ficam centralizados aqui para reduzir friccao de contato e manter o portfolio com uma saida objetiva."
+                tone="light"
+              />
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <CTAButton href={PROFILE.whatsappUrl} iconLeft={<WhatsAppIcon className="h-4 w-4" />}>
+                  Falar no WhatsApp
+                </CTAButton>
+                <CTAButton href={`mailto:${PROFILE.email}`} variant="lightOutline" iconLeft={<MailIcon className="h-4 w-4" />}>
+                  Enviar e-mail
+                </CTAButton>
+                <CTAButton href={PROFILE.linkedinUrl} variant="light" iconRight={<ArrowRightIcon className="h-4 w-4" />}>
+                  Abrir LinkedIn
+                </CTAButton>
+              </div>
+
+              <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/6 p-6">
+                <div className="flex items-start gap-4">
+                  <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/10">
+                    <LaptopIcon className="h-6 w-6" />
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.24em] text-white/58">Disponibilidade</p>
+                    <p className="mt-3 text-base leading-7 text-white/78">
+                      Aberto a oportunidades e projetos em embedded systems, firmware, IoT, telemetria, aquisicao de dados e integracao de sistemas.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="overflow-hidden rounded-[2rem] border border-ink/10 bg-mist shadow-panel">
+                <div className="relative aspect-[16/10]">
+                  <Image
+                    src={IMAGES.contact.primary.src}
+                    alt={IMAGES.contact.primary.alt}
+                    fill
+                    sizes="(min-width: 1024px) 40vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className={`${cardClass("dark")} p-6`}>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {CONTACT_LINKS.slice(0, 4).map((item) => (
+                    <ContactCard key={item.label} item={item} />
+                  ))}
+                  <div className="sm:col-span-2">
+                    <ContactCard item={CONTACT_LINKS[4]} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -790,14 +1146,32 @@ export default function PortfolioPage() {
         </section>
       </main>
 
-      <footer className="border-t border-white/10 bg-slate-950 py-6">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 text-center text-sm text-slate-400 sm:flex-row sm:text-left lg:px-8">
-          <p>© 2026 Nickolas Bernardo Alvarez Gomes.</p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {navItems.map((item) => (
-              <a key={item.href} href={item.href} className="transition hover:text-white">
-                {item.label}
-              </a>
+      <footer className="border-t border-ink/10 bg-night text-white">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1.1fr_1.9fr] lg:px-8">
+          <div className="max-w-md">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/52">{PROFILE.name}</p>
+            <h2 className="mt-4 font-display text-3xl leading-tight text-balance">Portfolio tecnico para firmware, telemetria, IoT e integracao entre hardware e software.</h2>
+            <p className="mt-5 text-sm leading-7 text-white/70">{PROFILE.summary}</p>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
+            {FOOTER_GROUPS.map((group) => (
+              <div key={group.title}>
+                <h3 className="font-display text-lg text-white">{group.title}</h3>
+                <ul className="mt-4 space-y-3 text-sm text-white/68">
+                  {group.links.map((link) => {
+                    const external = isExternalHref(link.href);
+
+                    return (
+                      <li key={link.label}>
+                        <a href={link.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} className="hover:text-white">
+                          {link.label}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             ))}
           </div>
         </div>

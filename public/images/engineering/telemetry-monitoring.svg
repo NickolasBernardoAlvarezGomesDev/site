@@ -1,0 +1,23 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="900" rx="40" fill="#0B1321"/>
+  <rect x="70" y="70" width="1060" height="760" rx="32" fill="#101E33"/>
+  <rect x="120" y="120" width="500" height="220" rx="24" fill="#172A45"/>
+  <rect x="650" y="120" width="430" height="220" rx="24" fill="#172A45"/>
+  <rect x="120" y="380" width="960" height="340" rx="24" fill="#0F1C30"/>
+  <path d="M170 264C214 236 234 236 280 264C326 292 346 292 392 264C438 236 458 236 504 264C550 292 570 292 616 264" stroke="#1FD08A" stroke-width="18" stroke-linecap="round"/>
+  <path d="M710 280H866" stroke="#4CC3FF" stroke-width="18" stroke-linecap="round"/>
+  <path d="M710 232H1010" stroke="#F5A84C" stroke-width="18" stroke-linecap="round"/>
+  <path d="M160 650L300 580L420 610L560 520L700 560L820 470L970 520" stroke="#1FD08A" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="580" r="14" fill="#1FD08A"/>
+  <circle cx="560" cy="520" r="14" fill="#1FD08A"/>
+  <circle cx="820" cy="470" r="14" fill="#1FD08A"/>
+  <rect x="150" y="150" width="140" height="42" rx="21" fill="#1FD08A" fill-opacity="0.18"/>
+  <rect x="680" y="150" width="160" height="42" rx="21" fill="#4CC3FF" fill-opacity="0.18"/>
+  <rect x="160" y="760" width="230" height="24" rx="12" fill="#2D4059"/>
+  <rect x="420" y="760" width="180" height="24" rx="12" fill="#2D4059"/>
+  <rect x="620" y="760" width="210" height="24" rx="12" fill="#2D4059"/>
+  <rect x="860" y="760" width="130" height="24" rx="12" fill="#2D4059"/>
+  <text x="150" y="180" fill="#BDEFD8" font-family="Arial, sans-serif" font-size="28" font-weight="700">Telemetry</text>
+  <text x="680" y="180" fill="#B8E6FF" font-family="Arial, sans-serif" font-size="28" font-weight="700">Sensor events</text>
+  <text x="160" y="455" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="42" font-weight="700">Monitoramento e alertas</text>
+</svg>

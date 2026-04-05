@@ -201,3 +201,19 @@ export function LaptopIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function MenuIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass(className)} aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
+}
+
+export function CloseIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass(className)} aria-hidden="true">
+      <path d="m6 6 12 12M18 6 6 18" />
+    </svg>
+  );
+}
