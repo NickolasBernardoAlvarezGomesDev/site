@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Nickolas Bernardo Alvarez Gomes | Portfolio tecnico",
+  title: "Firmware, telemetria e sistemas embarcados | Nickolas Bernardo Alvarez Gomes",
   description:
-    "Portfolio de Nickolas Bernardo Alvarez Gomes com foco em embedded systems, firmware, IoT, telemetria, aquisicao de dados e integracao hardware-software.",
+    "Portfolio tecnico de Nickolas Bernardo Alvarez Gomes com foco em firmware, telemetria, sistemas embarcados, aquisicao de dados e integracao entre hardware e software.",
   keywords: [
     "Nickolas",
     "portfolio tecnico",
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
     "integracao hardware software"
   ],
   openGraph: {
-    title: "Nickolas Bernardo Alvarez Gomes | Portfolio tecnico",
+    title: "Firmware, telemetria e sistemas embarcados | Nickolas Bernardo Alvarez Gomes",
     description:
-      "Portfolio tecnico orientado a firmware, sistemas embarcados, telemetria, dados e integracao de sistemas.",
+      "Portfolio tecnico orientado a firmware, telemetria, sistemas embarcados e integracao de sistemas em aplicacoes reais.",
     type: "website",
     locale: "pt_BR"
   }
