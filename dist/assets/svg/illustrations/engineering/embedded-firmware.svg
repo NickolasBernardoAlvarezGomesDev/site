@@ -1,0 +1,21 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="900" rx="40" fill="#111B2D"/>
+  <rect x="80" y="80" width="1040" height="740" rx="32" fill="#18263C"/>
+  <rect x="120" y="140" width="420" height="560" rx="28" fill="#0E1728"/>
+  <rect x="620" y="140" width="420" height="560" rx="28" fill="#0E1728"/>
+  <rect x="190" y="210" width="280" height="420" rx="20" fill="#243858"/>
+  <rect x="690" y="210" width="280" height="420" rx="20" fill="#243858"/>
+  <path d="M540 420C600 420 600 420 660 420" stroke="#1FD08A" stroke-width="18" stroke-linecap="round"/>
+  <path d="M540 470C600 470 600 470 660 470" stroke="#1FD08A" stroke-width="18" stroke-linecap="round"/>
+  <path d="M250 180V120" stroke="#F5A84C" stroke-width="16" stroke-linecap="round"/>
+  <path d="M350 180V120" stroke="#F5A84C" stroke-width="16" stroke-linecap="round"/>
+  <path d="M450 180V120" stroke="#F5A84C" stroke-width="16" stroke-linecap="round"/>
+  <path d="M750 180V120" stroke="#4CC3FF" stroke-width="16" stroke-linecap="round"/>
+  <path d="M850 180V120" stroke="#4CC3FF" stroke-width="16" stroke-linecap="round"/>
+  <path d="M950 180V120" stroke="#4CC3FF" stroke-width="16" stroke-linecap="round"/>
+  <rect x="180" y="730" width="350" height="24" rx="12" fill="#2B3D58"/>
+  <rect x="670" y="730" width="310" height="24" rx="12" fill="#2B3D58"/>
+  <text x="168" y="118" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="44" font-weight="700">Firmware + embarcados</text>
+  <text x="235" y="290" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="28" font-weight="700">Control</text>
+  <text x="735" y="290" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="28" font-weight="700">I/O Layer</text>
+</svg>

@@ -1,0 +1,16 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="900" rx="40" fill="#ECF3F8"/>
+  <rect x="80" y="80" width="1040" height="740" rx="32" fill="#FFFFFF"/>
+  <rect x="130" y="140" width="300" height="160" rx="24" fill="#102033"/>
+  <rect x="450" y="140" width="250" height="160" rx="24" fill="#18C37E" fill-opacity="0.18"/>
+  <rect x="720" y="140" width="330" height="160" rx="24" fill="#F5E6CB"/>
+  <rect x="130" y="340" width="920" height="380" rx="28" fill="#F7FAFD"/>
+  <path d="M180 630L320 540L450 580L590 460L720 500L860 410L1000 450" stroke="#18C37E" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="320" cy="540" r="14" fill="#18C37E"/>
+  <circle cx="590" cy="460" r="14" fill="#18C37E"/>
+  <circle cx="860" cy="410" r="14" fill="#18C37E"/>
+  <text x="160" y="205" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="28" font-weight="700">24/7</text>
+  <text x="480" y="205" fill="#102033" font-family="Arial, sans-serif" font-size="28" font-weight="700">Integrações</text>
+  <text x="770" y="205" fill="#102033" font-family="Arial, sans-serif" font-size="28" font-weight="700">Menos retrabalho</text>
+  <text x="160" y="395" fill="#102033" font-family="Arial, sans-serif" font-size="42" font-weight="700">Dashboard operacional</text>
+</svg>
